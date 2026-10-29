@@ -1,8 +1,12 @@
 import logging
 import os
 
+from dotenv import load_dotenv
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, Update
 from telegram.ext import Application, CommandHandler, ContextTypes
+
+# Load local .env values; deployment environment variables still take precedence.
+load_dotenv()
 
 logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s: %(message)s", level=os.getenv("LOG_LEVEL", "INFO"))
 log = logging.getLogger("nba-dice-bot")
