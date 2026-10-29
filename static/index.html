@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NBA DICE</title>
+<style>
+:root{color-scheme:dark;--gold:#d6ad55}*{box-sizing:border-box}body{margin:0;background:#080909;color:#f5f2ea;font:16px system-ui,sans-serif}.wrap{max-width:760px;margin:auto;padding:24px}.card{background:#111212;border:1px solid #30312e;border-radius:18px;padding:20px;margin:16px 0}.brand{color:var(--gold);font-weight:900;letter-spacing:3px}.hero{background:linear-gradient(135deg,#211d14,#101111);padding:28px;border-radius:20px;border:1px solid #4a3d20}.hero h1{font-size:clamp(38px,8vw,64px);line-height:.95;margin:14px 0}.hero h1 span{color:var(--gold)}.muted{color:#a4a59f;font-size:13px}.numbers{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0}.num,button{cursor:pointer;border-radius:10px;border:1px solid #45443b;padding:12px;background:#202120;color:#eee;font-weight:800}.num.active,.primary{background:var(--gold);color:#16130b;border-color:var(--gold)}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.field{width:100%;padding:12px;border-radius:10px;border:1px solid #45443b;background:#090a0a;color:white}.dice{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:18px 0}.die{aspect-ratio:1;border-radius:12px;background:#eee9dc;color:#151515;display:grid;place-items:center;font-size:clamp(22px,5vw,36px);font-weight:900;box-shadow:inset 0 2px 4px #fff}.result{padding:12px;background:#201d14;border:1px solid #554523;border-radius:10px;color:#f2d486;margin-top:12px}.foot{color:#777;font-size:11px;text-align:center;margin:28px 0}@media(max-width:480px){.wrap{padding:14px}.card{padding:15px}.numbers,.dice{gap:5px}.num{padding:10px 0}}
+</style>
+</head>
+<body><main class="wrap">
+<div class="brand">⚄ NBA DICE</div>
+<section class="hero"><div class="muted">THE LUCK IS YOURS</div><h1>ROLL BIG.<br><span>WIN BIG.</span></h1><p>Six dice. Two lucky numbers. Choose your picks and try the demo game.</p></section>
+<section class="card"><h2>Player profile</h2><label class="muted" for="name">Your player name</label><input class="field" id="name" maxlength="24" placeholder="Enter your name"><p class="muted">Demo wallet: <b id="wallet">1,200 ◈</b></p></section>
+<section class="card"><h2>Choose your numbers</h2><p class="muted">First number</p><div class="numbers" id="one"></div><p class="muted">Second number</p><div class="numbers" id="two"></div><div class="row"><div><label class="muted" for="bet">Bet coins</label><input class="field" id="bet" type="number" min="1" value="80"></div><div><label class="muted">Maximum demo payout</label><div class="field" id="potential">480 coins</div></div></div><div class="dice" id="dice"></div><button class="primary" id="roll">⚄ Roll dice</button><div id="result" aria-live="polite"></div></section>
+<section class="card"><h3>Telegram bot commands</h3><p class="muted">Use /start to open the game, /game to reopen it, or /help for instructions in the Telegram bot.</p></section>
+<p class="foot">NBA DICE · DEMO ONLY · Coins and rolls are simulated; no payments or real winnings.</p>
+</main>
+<script>
+let p1=2,p2=5,coins=1200;const $=id=>document.getElementById(id);
+function makePick(id,which){for(let n=1;n<=6;n++){const b=document.createElement('button');b.className='num'+((which===1?p1:p2)===n?' active':'');b.textContent=n;b.onclick=()=>{if(which===1)p1=n;else p2=n;makeAll()};$(id).appendChild(b)}}
+function makeAll(){$('one').innerHTML='';$('two').innerHTML='';makePick('one',1);makePick('two',2);$('potential').textContent=(Math.max(0,Number($('bet').value)||0)*6)+' coins'}
+makeAll();$('bet').addEventListener('input',makeAll);for(let i=0;i<6;i++)$('dice').insertAdjacentHTML('beforeend','<div class="die">⚀</div>');
+$('roll').onclick=()=>{const name=$('name').value.trim(),bet=Math.floor(Number($('bet').value));if(!name){$('result').innerHTML='<div class="result">Enter your player name first.</div>';return}if(!bet||bet<1||bet>coins){$('result').innerHTML='<div class="result">Enter a valid bet within your demo wallet.</div>';return}coins-=bet;const vals=Array.from({length:6},()=>1+Math.floor(Math.random()*6));[...$('dice').children].forEach((d,i)=>d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][vals[i]-1]);let matches=vals.filter(v=>p1===p2?v===p1:(v===p1||v===p2)).length;let win=matches>=2?bet*Math.min(matches,6):0;coins+=win;$('wallet').textContent=coins.toLocaleString()+' ◈';$('result').innerHTML='<div class="result">'+(win?'🏆 '+name+' matched '+matches+' dice and won '+win+' demo coins!':'No win this time, '+name+'. Try another roll!')+'</div>'};
+</script></body></html>
